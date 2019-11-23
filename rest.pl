@@ -3,7 +3,7 @@
 
 :- dynamic(known/2).
 
-open_notify_url("https://api.yelp.com/v3/businesses/search?term=delis&latitude=37.786882&longitude=-122.399972").
+open_notify_url("https://api.yelp.com/v3/businesses/search?term=food&location=6200+University+Blvd%2C+Vancouver%2C+BC+V6T+1Z4&radius=3000&limit=50").
 %! yelp_data(-Data) is det.
 %  get Yelp API restaurant data and read in as dict
 yelp_data(Data) :-
@@ -25,7 +25,7 @@ cached_yelp_data(Data) :-
 %  extract all business names from the list of businesses from the data.
 yelp_names(Data, Names) :-
     Businesses = Data.get(businesses),
-    Names = yelp_name_helper(Businesses).
+    yelp_name_helper(Businesses, Names).
 
 yelp_name_helper([], []).
 yelp_name_helper(Businesses, AllNames) :-
