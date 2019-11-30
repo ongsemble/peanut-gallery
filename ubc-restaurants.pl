@@ -1,5 +1,5 @@
 rest_name(X) :-
-    rest([X|'|'|_]).
+    rest([X,"|",_]).
 
 rest("UBC - Dog House Food Cart|0|2|0|0|[Details](https://inspections.vcha.ca/Facility/Details/8b6ce9aa-a263-4fb3-87d0-46a279dbd160)").
 rest("AMS - Store Room|0|0|0|1|[Details](https://inspections.vcha.ca/Facility/Details/5f8f3d30-9c51-11d3-baa9-005004ae1145)").
