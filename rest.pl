@@ -32,3 +32,9 @@ yelp_name_helper(Businesses, AllNames) :-
     [X|Xs] = Businesses,
     yelp_name_helper(Xs, Names),
     AllNames = [X.name|Names].
+
+yelp_address(X, Address) :-
+    rest_object = X.get(_42240),
+    location_object = rest_object.get(location),
+    r_location = location_object.get(_42168),
+    atomic_list_concat([r_location.get(address1), r_location.get(city), r_location.get(state), r_location.get(zip_code)], ' ', Address).
