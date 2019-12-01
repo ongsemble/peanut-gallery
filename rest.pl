@@ -34,7 +34,24 @@ yelp_name_helper(Businesses, AllNames) :-
     AllNames = [X.name|Names].
 
 yelp_address(X, Address) :-
-    rest_object = X.get(_42240),
-    location_object = rest_object.get(location),
-    r_location = location_object.get(_42168),
-    atomic_list_concat([r_location.get(address1), r_location.get(city), r_location.get(state), r_location.get(zip_code)], ' ', Address).
+    yelp_location(X, Location),
+    yelp_address1(Location, Address1),
+    yelp_city(Location, City),
+    yelp_state(Location, State),
+    yelp_zip(Location, Zip_code),
+    atomic_list_concat([Address1, City, State, Zip_code], ' ', Address).
+
+yelp_location(X, Location) :-
+    Location = X.get(location).
+
+yelp_address1(Location, Address1) :-
+    Address1 = Location.get(address1).
+
+yelp_city(Location, City) :-
+    City = Location.get(city).
+
+yelp_state(Location, State) :-
+    State = Location.get(state).
+
+yelp_zip(Location, Zip_code) :-
+    Zip_code = Location.get(zip_code).
