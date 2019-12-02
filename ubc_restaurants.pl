@@ -21,7 +21,7 @@ rest("Hillel BC Society|6145 Student Union Blvd Vancouver BC V6T 1Z1|0|0|0|0").
 rest("JJ Bean - UBC|6005 University Blvd Vancouver BC V6T 1Z1|0|2|0|0").
 rest("VSB - University Hill Elementary - Hot Lunch Program|5395 Chancellor Blvd Vancouver BC V6T 1E2|0|0|0|0").
 rest("UBC - Starbucks - UBC Bookstore|6200 University Blvd Vancouver BC V6T 1Z4|0|1|0|0").
-rest("Loafe Cafe|6163 University Blvd Vancouver BC V6T 1Z1|0|6|0|0").
+rest("Loafe Cafe|6163 University Boulevard Vancouver BC V6T 1Z1|0|6|0|0").
 rest("National Soccer Development Centre - Athlete's Kitchen|3065 Wesbrook Mall Vancouver BC V6T 1Z3|0|2|0|0").
 rest("UBC - Starbucks - Fred Kaiser Building|2332 Main Mall Vancouver BC V6T 1Z4|0|6|0|0").
 rest("Rain or Shine - University Blvd|6001 University Blvd Vancouver BC V6T 1Z1|0|2|0|0").
