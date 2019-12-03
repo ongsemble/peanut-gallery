@@ -33,6 +33,12 @@ r_address(rest(X), A) :-
 
 % restaurant(Name, Address, Phone, Price, Rating, TotalInf, CritInf).
 
+build_restaurant(Yelp_business, restaurant(Name, Address, Phone, Price, Rating, 0, 0)) :-
+    Name = Yelp_business.name,
+    yelp_address(Yelp_business, Address),
+    Phone = Yelp_business.phone,
+    Price = Yelp_business.price,
+    Rating = Yelp_business.rating.
 build_restaurant(Yelp_business, Ubc_business, restaurant(Name, Address, Phone, Price, Rating, TotalInf, CritInf)) :-
     Name = Yelp_business.name,
     yelp_address(Yelp_business, Address),
@@ -49,18 +55,25 @@ r_equals(R1, R2) :-
     atom_string(Atom_A2, A2),
     A1 == Atom_A2.
 
-r_all_equals(Businesses, Rs) :-
-    [X|Xs] = Businesses,
-    [Y|Ys] = Rs,
-    r_equals(X, Y),
-    r_all_equals(Xs, Ys).
-r_all_equals([X|Xs], [Y,Ys|R]) :-
-    \+ r_equals(X, Y),
-    r_equals([X|Xs], [Ys|R]).
+%r_update_all_ifs(Filtered, Rs, L) is true when L is a list of 
+r_update_all_ifs([], []).
+r_update_all_ifs(Filtered, [L1|L]) :-
+    [X|Xs] = Filtered,
+    rests(Rs),
+    r_update_ifs(X, Rs, L1),
+    r_update_all_ifs(Xs, L).
 
+r_update_ifs(Business, [], MyR) :-
+    build_restaurant(Business, MyR).
+r_update_ifs(Business, Rs, MyR) :-
+    [Y|_] = Rs,
+    r_equals(Business, Y),
+    build_restaurant(Business, Y, MyR).
+r_update_ifs(Business, Rs, MyR) :-
+    [_|Ys] = Rs,
+    r_update_ifs(Business, Ys, MyR).
 
-
-/*_10850{
+/*r_update_all_ifs([_10850{
     alias:"loafe-cafe-vancouver", 
     categories:[_11158{alias:"cafes", title:"Cafes"}], 
     coordinates:_11188{latitude:49.2660229, longitude: -123.2491421}, 
@@ -70,4 +83,5 @@ r_all_equals([X|Xs], [Y,Ys|R]) :-
     image_url:"https://s3-media4.fl.yelpcdn.com/bphoto/hhbG2TLRXxhINw9caFJrYQ/o.jpg", 
     is_closed:false, 
     location:_10996{address1:"6163 University Boulevard", address2:"", address3:"", city:"Vancouver", country:"CA", 
-    display_address:["6163 University Blvd", "Vancouver, BC V6T 1Z1", "Canada"], state:"BC", zip_code:"V6T 1Z1"}, name:"Loafe Cafe", phone:"", price:"$", rating:4.0, review_count:36, transactions:[], url:"https://www.yelp.com/biz/loafe-cafe-vancouver?adjust_creative=sg5ZSCMjYVPZP8i4gO9big&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=sg5ZSCMjYVPZP8i4gO9big"}*/
+    display_address:["6163 University Blvd", "Vancouver, BC V6T 1Z1", "Canada"], state:"BC", zip_code:"V6T 1Z1"}, name:"Loafe Cafe", phone:"", price:"$", rating:4.0, review_count:36, transactions:[], url:"https://www.yelp.com/biz/loafe-cafe-vancouver?adjust_creative=sg5ZSCMjYVPZP8i4gO9big&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=sg5ZSCMjYVPZP8i4gO9big"}, 
+_21564{alias:"rain-or-shine-vancouver", categories:[_21868{alias:"icecream", title:"Ice Cream & Frozen Yogurt"}], coordinates:_21906{latitude:49.2663463, longitude: -123.2467852}, display_phone:"+1 604-620-2004", distance:324.5953463511655, id:"CQAc8CFadjY8fv3mkaEWxw", image_url:"https://s3-media1.fl.yelpcdn.com/bphoto/IL64o7A7ugZ7YCkPrRRwLQ/o.jpg", is_closed:false, location:_21712{address1:"6001 University Boulevard", address2:"", address3:null, city:"Vancouver", country:"CA", display_address:["6001 University Boulevard", "Vancouver, BC V5H 3Z7", "Canada"], state:"BC", zip_code:"V5H 3Z7"}, name:"Rain or Shine", phone:"+16046202004", price:"$$", rating:4.0, review_count:24, transactions:[], url:"https://www.yelp.com/biz/rain-or-shine-vancouver?adjust_creative=sg5ZSCMjYVPZP8i4gO9big&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=sg5ZSCMjYVPZP8i4gO9big"}], L). */

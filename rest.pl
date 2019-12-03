@@ -1,4 +1,4 @@
-:- module(rest, [yelp_address/2]).
+:- module(rest, [cached_yelp_data/1, yelp_address/2]).
 :- use_module(library(http/json)).
 :- use_module(library(http/http_open)).
 
