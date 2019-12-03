@@ -1,3 +1,5 @@
+:- module(reader, [r_total_inf/2, r_all_critical_inf/2]).
+
 :- use_module(ubc_restaurants).
 :- use_module(rest).
 
@@ -18,16 +20,27 @@ read_file(Stream,[X|L]) :-
 r_name(rest(X), Name) :-
     split_string(X, "|", "", [Name|_]).
 
-% r_total_if is true if the restaurant of name Name has I total food safety infractions
-r_total_if(rest(X), I) :-
+% r_total_inf is true if the restaurant of name Name has I total food safety infractions
+r_total_inf(rest(X), I) :-
     split_string(X, "|", "", [_, _, _, I|_]).
 
-% r_all_critical_if is true if the restaurant of name Name has I outstanding critical food safety infractions
-r_all_critical_if(rest(X), I) :-
+% r_all_critical_inf is true if the restaurant of name Name has I outstanding critical food safety infractions
+r_all_critical_inf(rest(X), I) :-
     split_string(X, "|", "", [_, _, _, _, I|_]).
 
 r_address(rest(X), A) :-
     split_string(X, "|", "", [_, A|_]).
+
+% restaurant(Name, Address, Phone, Price, Rating, TotalInf, CritInf).
+
+build_restaurant(Yelp_business, Ubc_business, restaurant(Name, Address, Phone, Price, Rating, TotalInf, CritInf)) :-
+    Name = Yelp_business.name,
+    yelp_address(Yelp_business, Address),
+    Phone = Yelp_business.phone,
+    Price = Yelp_business.price,
+    Rating = Yelp_business.rating,
+    r_total_inf(Ubc_business, TotalInf),
+    r_all_critical_inf(Ubc_business, CritInf).
 
 % r_equals(R1,R2) is true if json object R1 (taken from Yelp) is contained within R2 (Hedgehog) as a name.
 r_equals(R1, R2) :-
@@ -36,7 +49,7 @@ r_equals(R1, R2) :-
     atom_string(Atom_A2, A2),
     A1 == Atom_A2.
 
-r_all_equals(Businesses, Rs, L) :-
+r_all_equals(Businesses, Rs) :-
     [X|Xs] = Businesses,
     [Y|Ys] = Rs,
     r_equals(X, Y),
