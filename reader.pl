@@ -33,20 +33,20 @@ r_address(rest(X), A) :-
 
 % restaurant(Name, Address, Phone, Price, Rating, TotalInf, CritInf).
 
-business_name(Business, "") :- \+ string(Business.name).
-business_name(Business, Business.name) :- string(Business.name).
+business_name(Business, "N/A") :- \+ get_dict(name, Business, _).
+business_name(Business, Name) :- get_dict(name, Business, Name).
 
-business_address(Business, "") :- \+ yelp_address(Business, _).
+business_address(Business, "N/A") :- \+ yelp_address(Business, _).
 business_address(Business, Address) :- yelp_address(Business, Address).
 
-business_phone(Business, "") :- \+ string(Business.phone).
-business_phone(Business, Business.phone) :- string(Business.phone).
+business_phone(Business, "N/A") :- \+ get_dict(phone, Business, _).
+business_phone(Business, Phone) :- get_dict(phone, Business, Phone).
 
-business_price(Business, "") :- \+ string(Business.price).
-business_price(Business, Business.price) :- string(Business.price).
+business_price(Business, "N/A") :- \+ get_dict(price, Business, _).
+business_price(Business, Price) :- get_dict(price, Business, Price).
 
-business_rating(Business, "") :- \+ string(Business.rating).
-business_rating(Business, Business.rating) :- string(Business.rating).
+business_rating(Business, "N/A") :- \+ get_dict(rating, Business, _).
+business_rating(Business, Rating) :- get_dict(rating, Business, Rating).
 
 build_restaurant(Yelp_business, restaurant(Name, Address, Phone, Price, Rating, 0, 0)) :-
     business_name(Yelp_business, Name),
