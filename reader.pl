@@ -33,18 +33,33 @@ r_address(rest(X), A) :-
 
 % restaurant(Name, Address, Phone, Price, Rating, TotalInf, CritInf).
 
+business_name(Business, "") :- \+ string(Business.name).
+business_name(Business, Business.name) :- string(Business.name).
+
+business_address(Business, "") :- \+ yelp_address(Business, _).
+business_address(Business, Address) :- yelp_address(Business, Address).
+
+business_phone(Business, "") :- \+ string(Business.phone).
+business_phone(Business, Business.phone) :- string(Business.phone).
+
+business_price(Business, "") :- \+ string(Business.price).
+business_price(Business, Business.price) :- string(Business.price).
+
+business_rating(Business, "") :- \+ string(Business.rating).
+business_rating(Business, Business.rating) :- string(Business.rating).
+
 build_restaurant(Yelp_business, restaurant(Name, Address, Phone, Price, Rating, 0, 0)) :-
-    Name = Yelp_business.name,
-    yelp_address(Yelp_business, Address),
-    Phone = Yelp_business.phone,
-    Price = Yelp_business.price,
-    Rating = Yelp_business.rating.
+    business_name(Yelp_business, Name),
+    business_address(Yelp_business, Address),
+    business_phone(Yelp_business, Phone),
+    business_price(Yelp_business, Price),
+    business_rating(Yelp_business, Rating).
 build_restaurant(Yelp_business, Ubc_business, restaurant(Name, Address, Phone, Price, Rating, TotalInf, CritInf)) :-
-    Name = Yelp_business.name,
-    yelp_address(Yelp_business, Address),
-    Phone = Yelp_business.phone,
-    Price = Yelp_business.price,
-    Rating = Yelp_business.rating,
+    business_name(Yelp_business, Name),
+    business_address(Yelp_business, Address),
+    business_phone(Yelp_business, Phone),
+    business_price(Yelp_business, Price),
+    business_rating(Yelp_business, Rating),
     r_total_inf(Ubc_business, TotalInf),
     r_all_critical_inf(Ubc_business, CritInf).
 
