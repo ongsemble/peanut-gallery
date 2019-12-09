@@ -1,13 +1,49 @@
 % User query for restaurant recommendations
 
 % pricing(Input, End, ToFilter, Filtered) is true if Filtered is a list of restaurants filtered by Input from ToFilter
-pricing([],_,R,R).
-pricing(['$'| End],End,L2,R) :-
-    some_filter_fn(L2,R).
-pricing(['$$'| End],End,L1, R) :-
-    mp(L,L1,R).
-answer(['$$$'| End],End,L1,R) :-
-    noun_phrase(L,L1,R).
+pricing([], Res, Res).
+pricing(_, [], []).
+pricing(P, [restaurant(N,A,P,PR,R,T,C) | Rs], Res) :-
+    pricing(P, Rs, R2),
+    append(R2, [restaurant(N,A,P,PR,R,T,C)], Res).
+pricing(P1, [restaurant(_,_,P2,_,_,_,_) | Rs], Res) :-
+    dif(P1, P2),
+    pricing(P1, Rs, Res).
+
+% rating()
+rating([], Res, Res).
+rating(_, [], []).
+rating((L-U), [restaurant(N,A,P,PR,R,T,C) | Rs], Res) :-
+    R >= L,
+    R =< U,
+    rating((L-U), Rs, R2),
+    append(R2, [restaurant(N,A,P,PR,R,T,C)], Res).
+rating((L-U), [restaurant(_,_,_,_,R,_,_) | Rs], Res) :-
+    (R < L;
+    R > U),
+    rating((L-U), Rs, Res).
+
+% total_ifs()
+total_ifs([], Res, Res).
+total_ifs(_, [], []).
+total_ifs(TI, [restaurant(N,A,P,PR,R,T,C) | Rs], Res) :-
+    total_ifs(TI, Rs, R2),
+    T =< TI,
+    append(R2, [restaurant(N,A,P,PR,R,T,C)], Res).
+total_ifs(TI, [restaurant(_,_,_,_,_,T,_) | Rs], Res) :-
+    T > TI,
+    total_ifs(TI, Rs, Res).
+
+% crit_ifs()
+crit_ifs([], Res, Res).
+crit_ifs(_, [], []).
+crit_ifs(CI, [restaurant(N,A,P,PR,R,T,C) | Rs], Res) :-
+    crit_ifs(CI, Rs, R2),
+    C =< CI,
+    append(R2, [restaurant(N,A,P,PR,R,T,C)], Res).
+crit_ifs(CI, [restaurant(_,_,_,_,_,_,C) | Rs], Res) :-
+    C > CI,
+    crit_ifs(CI, Rs, Res).
 
 % query(pricing, rating, total_ifs, crit_ifs) is true when ...
 query(Pricing, Rating, Total_ifs, Crit_ifs, A) :-
@@ -30,7 +66,7 @@ q(Ans) :-
     writeln("Pricing? ($ - $$$)"), 
     readln(Ln_pricing),
 
-    writeln("Rating? (0.0 - 5.0)"), 
+    writeln("Please give rating (0.0-5.0, in 0.5 increments) lower and upper bounds, eg. 1.5-4.0"), 
     readln(Ln_rating),
 
     writeln("Maximum number of total safety infractions?"), 
@@ -39,5 +75,5 @@ q(Ans) :-
     writeln("Maximum number of critical safety infractions?"), 
     readln(Ln_crit_ifs),
 
-    query(Ln_pricing, Ln_rating, Ln_total_ifs, Ln_crit_ifs, Ans),
-    member(End,[[],['?'],['.']]).
+    query(Ln_pricing, Ln_rating, Ln_total_ifs, Ln_crit_ifs, Ans).
+    %member(End,[[],['?'],['.']]).
