@@ -1,4 +1,4 @@
-:- module(reader, [r_total_inf/2, r_all_critical_inf/2]).
+:- module(reader, [r_update_all_ifs/2, r_total_inf/2, r_all_critical_inf/2]).
 
 :- use_module(ubc_restaurants).
 :- use_module(rest).
@@ -59,7 +59,7 @@ business_rating(Business, "N/A") :- \+ get_dict(rating, Business, _).
 business_rating(Business, Rating) :- get_dict(rating, Business, Rating).
 
 % build_restaurant(B, R) is true when Restaurant R contains all essential metadata of Business B
-build_restaurant(Yelp_business, restaurant(Name, Address, Phone, Price, Rating, 0, 0)) :-
+build_restaurant(Yelp_business, restaurant(Name, Address, Phone, Price, Rating, "0", "0")) :-
     business_name(Yelp_business, Name),
     business_address(Yelp_business, Address),
     business_phone(Yelp_business, Phone),
