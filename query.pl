@@ -1,6 +1,6 @@
 % User query for restaurant recommendations
 
-% pricing(Input, End, ToFilter, Filtered) is true if Filtered is a list of restaurants filtered by Input from ToFilter
+% pricing(Input, ToFilter, Filtered) is true if Filtered is a list of restaurants such that ToFilter is filtered by Input
 pricing([], Res, Res).
 pricing(_, [], []).
 pricing(P, [restaurant(N,A,P,PR,R,T,C) | Rs], Res) :-
@@ -10,7 +10,7 @@ pricing(P1, [restaurant(_,_,P2,_,_,_,_) | Rs], Res) :-
     dif(P1, P2),
     pricing(P1, Rs, Res).
 
-% rating()
+% rating(Input, ToFilter, Filtered) is true if Filtered is a list of restaurants such that ToFilter is filtered by Input
 rating([], Res, Res).
 rating(_, [], []).
 rating((L-U), [restaurant(N,A,P,PR,R,T,C) | Rs], Res) :-
@@ -23,7 +23,7 @@ rating((L-U), [restaurant(_,_,_,_,R,_,_) | Rs], Res) :-
     R > U),
     rating((L-U), Rs, Res).
 
-% total_ifs()
+% total_ifs(Input, ToFilter, Filtered) is true if Filtered is a list of restaurants such that ToFilter is filtered by Input
 total_ifs([], Res, Res).
 total_ifs(_, [], []).
 total_ifs(TI, [restaurant(N,A,P,PR,R,T,C) | Rs], Res) :-
@@ -34,7 +34,7 @@ total_ifs(TI, [restaurant(_,_,_,_,_,T,_) | Rs], Res) :-
     T > TI,
     total_ifs(TI, Rs, Res).
 
-% crit_ifs()
+% crit_ifs(Input, ToFilter, Filtered) is true if Filtered is a list of restaurants such that ToFilter is filtered by Input
 crit_ifs([], Res, Res).
 crit_ifs(_, [], []).
 crit_ifs(CI, [restaurant(N,A,P,PR,R,T,C) | Rs], Res) :-
@@ -45,7 +45,7 @@ crit_ifs(CI, [restaurant(_,_,_,_,_,_,C) | Rs], Res) :-
     C > CI,
     crit_ifs(CI, Rs, Res).
 
-% query(pricing, rating, total_ifs, crit_ifs) is true when ...
+% query(pricing, rating, total_ifs, crit_ifs, A) is true when A is the resultant of applying all given filters to restaurant data
 query(Pricing, Rating, Total_ifs, Crit_ifs, A) :-
     cached_yelp_data(Data),
     Businesses = Data.get(businesses),
@@ -54,8 +54,6 @@ query(Pricing, Rating, Total_ifs, Crit_ifs, A) :-
     rating(Rating, A1, A2),
     total_ifs(Total_ifs, A2, A3),
     crit_ifs(Crit_ifs, A3, A).
-
-% To get the input from a line:
 
 q(Ans) :-
     writeln("Restaurant recommender in the UBC area."),

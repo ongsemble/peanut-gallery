@@ -3,20 +3,24 @@
 :- use_module(ubc_restaurants).
 :- use_module(rest).
 
+% read_restaurants reads the given restaurant data
 read_restaurants :-
     open('ubc-restaurants.txt', read, Str),
     read_file(Str,Lines),
     close(Str),
     print(Lines), nl.
 
+% read_file is true when Stream is at the end
 read_file(Stream,[]) :-
     at_end_of_stream(Stream).
 
+%read_file(Stream, Rs) is true when Stream is read properly
 read_file(Stream,[X|L]) :-
     \+ at_end_of_stream(Stream),
     read(Stream,X),
     read_file(Stream,L).
 
+% r_name is true when X is a restaurant and Name is the name of the restaurant
 r_name(rest(X), Name) :-
     split_string(X, "|", "", [Name|_]).
 
@@ -28,32 +32,40 @@ r_total_inf(rest(X), I) :-
 r_all_critical_inf(rest(X), I) :-
     split_string(X, "|", "", [_, _, _, _, I|_]).
 
+% r_address is true if X is a restaurant and A is the address of the restaurant
 r_address(rest(X), A) :-
     split_string(X, "|", "", [_, A|_]).
 
 % restaurant(Name, Address, Phone, Price, Rating, TotalInf, CritInf).
 
+% business_name(B, N) is true when Name is the business's name or is N/A
 business_name(Business, "N/A") :- \+ get_dict(name, Business, _).
 business_name(Business, Name) :- get_dict(name, Business, Name).
 
+% business_address(B, A) is true when Address is the business's address or is N/A
 business_address(Business, "N/A") :- \+ yelp_address(Business, _).
 business_address(Business, Address) :- yelp_address(Business, Address).
 
+% business_phone(B, P) is true when Phone is the business's phone or is N/A
 business_phone(Business, "N/A") :- \+ get_dict(phone, Business, _).
 business_phone(Business, Phone) :- get_dict(phone, Business, Phone).
 
+% business_price(B, PR) is true when Price is the business's price or is N/A
 business_price(Business, "N/A") :- \+ get_dict(price, Business, _).
 business_price(Business, Price) :- get_dict(price, Business, Price).
 
+% business_rating(B, R) is true when Rating is the business's rating or is N/A
 business_rating(Business, "N/A") :- \+ get_dict(rating, Business, _).
 business_rating(Business, Rating) :- get_dict(rating, Business, Rating).
 
+% build_restaurant(B, R) is true when Restaurant R contains all essential metadata of Business B
 build_restaurant(Yelp_business, restaurant(Name, Address, Phone, Price, Rating, 0, 0)) :-
     business_name(Yelp_business, Name),
     business_address(Yelp_business, Address),
     business_phone(Yelp_business, Phone),
     business_price(Yelp_business, Price),
     business_rating(Yelp_business, Rating).
+% build_restaurant(B, R) is true when Restaurant R contains all essential metadata of Business B including total and critical infractions
 build_restaurant(Yelp_business, Ubc_business, restaurant(Name, Address, Phone, Price, Rating, TotalInf, CritInf)) :-
     business_name(Yelp_business, Name),
     business_address(Yelp_business, Address),
@@ -78,6 +90,7 @@ r_update_all_ifs(Filtered, [L1|L]) :-
     r_update_ifs(X, Rs, L1),
     r_update_all_ifs(Xs, L).
 
+% r_update_ifs(B, R, MR) is true when MR contains the inersection of B and R represented internally
 r_update_ifs(Business, [], MyR) :-
     build_restaurant(Business, MyR).
 r_update_ifs(Business, Rs, MyR) :-
